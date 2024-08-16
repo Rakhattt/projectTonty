@@ -1,39 +1,22 @@
 <template>
-  <div style="display: flex; justify-content: space-around; margin-top: 100px">
-    <!-- Draggable List 1 -->
-    <div>
-      <h3>Draggable 1</h3>
+  <div style="display: flex; margin-top: 100px">
+    <div v-for="(group, index) in groups" :key="index">
+      <h3>{{ group.name }}</h3>
       <draggable
-        v-model="list1"
+        v-model="group.images"
         group="images"
         class="drag-container"
         @end="update"
       >
-        <div v-for="(item, index) in list1" :key="index" class="drag-item">
-          <el-image
-            style="width: 100px; height: 100px"
-            :src="item"
-            fit="cover"
-          />
-        </div>
-      </draggable>
-    </div>
-
-    <!-- Draggable List 2 -->
-    <div>
-      <h3>Draggable 2</h3>
-      <draggable
-        v-model="list2"
-        group="images"
-        class="drag-container"
-        @end="update"
-      >
-        <div v-for="(item, index) in list2" :key="index" class="drag-item">
-          <el-image
-            style="width: 100px; height: 100px"
-            :src="item"
-            fit="cover"
-          />
+        <div
+          v-for="(item, itemIndex) in group.images"
+          :key="itemIndex"
+          class="drag-item"
+        >
+          <el-image :src="item" fit="cover" :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+           />
         </div>
       </draggable>
     </div>
@@ -41,20 +24,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { useImageStore } from "@/store/useImageStore";
+import { storeToRefs } from "pinia";
 
-// Инициализация двух списков изображений
-const list1 = ref([
-  "https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg",
-  "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-  "https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg",
-]);
-
-const list2 = ref([
-  "https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg",
-  "https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg",
-  "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
-]);
+const store = useImageStore();
+const { groups } = storeToRefs(store);
 
 const update = () => {
   console.log("Lists updated");
@@ -63,8 +37,8 @@ const update = () => {
 
 <style scoped>
 .drag-container {
-  width: 200px;
-  min-height: 200px;
+  width: 400px;
+  min-height: 100px;
   background-color: #f5f5f5;
   padding: 10px;
   border-radius: 5px;
