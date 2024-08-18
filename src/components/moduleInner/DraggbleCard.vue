@@ -1,7 +1,8 @@
 <template>
-  <div style="display: flex; margin-top: 100px">
+  <div>
     <div v-for="(group, index) in groups" :key="index">
       <h3>{{ group.name }}</h3>
+      <el-icon><EditPen /></el-icon>
       <draggable
         v-model="group.images"
         group="images"
@@ -37,7 +38,7 @@ const update = () => {
 
 <style scoped>
 .drag-container {
-  width: 400px;
+  width: 250px;
   min-height: 100px;
   background-color: #f5f5f5;
   padding: 10px;

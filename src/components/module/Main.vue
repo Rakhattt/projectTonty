@@ -2,8 +2,10 @@
   <main>
     <div class="container">
       <Loading :active="loading" />
-      <Card :srcList="imagesList3"/>
-      <DraggableCard :list1="imagesList1" :list2="imagesList2" @update="updateImages" />
+      <div class="d-flex justify-content-between">
+        <Card :srcList="imagesList3"/>
+        <DraggableCard :list1="imagesList1" :list2="imagesList2" @update="updateImages" />
+      </div>
     </div>
   </main>
 </template>
