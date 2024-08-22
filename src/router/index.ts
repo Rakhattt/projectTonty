@@ -3,22 +3,30 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "products",
+    name: "main",
     component: () => import("../components/module/Main.vue"),
     meta: {
       breadcrumb: "Карточки",
       pageTitle: "Все карточки",
     },
   },
-  // {
-  //   path: "/:id",
-  //   name: "productDetail",
-  //   component: () => import("../components/moduleInner/ProductDetail.vue"),
-  //   meta: {
-  //     breadcrumb: "Товар",
-  //     pageTitle: "Тест",
-  //   },
-  // },
+
+  {
+    path: "/",
+    // component: () => import("@/layouts/AuthLayout.vue"),
+    children: [
+      {
+        path: "/sign-up",
+        name: "sign-up",
+        component: () => import("../components/moduleInner/SignUp.vue"),
+      },
+      {
+        path: "/sign-in",
+        name: "sign-in",
+        component: () => import("../components/moduleInner/SignIn.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

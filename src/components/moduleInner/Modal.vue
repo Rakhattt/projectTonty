@@ -47,7 +47,7 @@ const saveGroup = () => {
     closeModal();
     input.value = "";
     ElNotification({
-    title: 'успешно',
+    title: '',
     message: 'Вы создали группу!',
     type: 'success',
   })
