@@ -18,12 +18,35 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/sign-up",
         name: "sign-up",
-        component: () => import("../components/moduleInner/SignUp.vue"),
+        component: () => import("../components/moduleInner/AuthComponent/SignUp.vue"),
       },
       {
         path: "/sign-in",
         name: "sign-in",
-        component: () => import("../components/moduleInner/SignIn.vue"),
+        component: () => import("../components/moduleInner/AuthComponent/SignIn.vue"),
+      },
+      {
+        path: "/login",
+        name: "login",
+        component: () => import("../components/moduleInner/AuthComponent/Login.vue"),
+      },
+      {
+        path: "/personal-account",
+        name: "personal-account",
+        component: () => import("../components/moduleInner/PersonalAccount.vue"),
+        meta: {
+          breadcrumb: "Личный кабинет",
+          pageTitle: "Личный кабинет",
+        },
+      },
+      {
+        path: "/guide",
+        name: "guide",
+        component: () => import("../components/moduleInner/Guide.vue"),
+        meta: {
+          breadcrumb: "Справочник",
+          pageTitle: "Справочник",
+        },
       },
     ],
   },

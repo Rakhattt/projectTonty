@@ -1,3 +1,24 @@
 .enroll {
-    width: 500px;
+    width: 600px;
+    margin: 300px auto;
+    border: 1px solid #dde7ff;
+    padding: 20px;
+    border-radius: 20px;
+    &_title {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #495c93;
+    }
+    &_subtitle {
+        color: #99a1b7;
+        font-weight: 500;
+        margin-right: 5px;
+    }
+}
+.ml-auto {
+    display: block;
+    margin-left: auto;
+}
+.el-form-item--label-top .el-form-item__label {
+    margin-bottom: 4px;
 }

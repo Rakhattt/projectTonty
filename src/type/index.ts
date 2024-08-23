@@ -15,3 +15,26 @@ export interface IPropsProduct {
 export interface IPropsSearchBar {
   placeholder: string;
 }
+export interface ISignUpData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+export interface ILogin {
+  login: string;
+  password: string;
+}
+export interface ISignInData {
+  email: string;
+  code: string;
+}
+export interface ILinksHeader {
+  title: string,
+  url: string,
+}
+export interface IPropsModalClient {
+  login: string,
+  password: string;
+  visible: boolean;
+}

@@ -49,7 +49,7 @@
 import { ref } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 import { storeToRefs } from "pinia";
-import ModalDragg from "@/components/moduleInner/ModalDragg.vue";
+import ModalDragg from "@/components/moduleInner/ModalComponent/ModalDragg.vue";
 
 const store = useImageStore();
 const { groups } = storeToRefs(store);

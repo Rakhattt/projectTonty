@@ -8,7 +8,7 @@
               >Главная</router-link
             >
           </li>
-          <li class="breadcrumb-item">
+          <li class="breadcrumb-item" style="color: #5683ed;">
             {{ pageTitle }}
           </li>
         </ul>
