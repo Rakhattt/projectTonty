@@ -1,0 +1,5 @@
+.personal {
+  display: grid;
+  grid-template-columns: repeat(3, 31.5%);
+  grid-gap: 24px;
+}

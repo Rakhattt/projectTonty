@@ -15,16 +15,7 @@
         <el-form-item label="Логин" label-position="top">
           <el-input v-model="signInData.login" placeholder="Логин" />
         </el-form-item>
-  
-        <el-form-item label="Пароль" label-position="top">
-          <el-input
-            v-model="signInData.password"
-            required
-            type="password"
-            placeholder="Пароль"
-            show-password
-          />
-        </el-form-item>
+
         <el-button type="submit primary" class="ml-auto"
           >Войти</el-button
         >
@@ -41,17 +32,12 @@
   
   const signInData = ref<ILogin>({
     login: "",
-    password: "",
   });
   defineProps<ILogin>();
   const router = useRouter();
   
   const signIn = () => {
-    if (signInData.value.login === "test@example.com" && signInData.value.password === "password") {
       router.push({ name: "main" });
-    } else {
-      alert("иииииууу");
-    }
   };
   </script>
   

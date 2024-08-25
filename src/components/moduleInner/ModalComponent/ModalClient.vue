@@ -9,19 +9,19 @@
           </button>
         </div>
         <div class="modal-py">
+          <el-form-item label="Имя" label-position="top">
+            <el-input
+              v-model="input"
+              class="modal-input"
+              placeholder="Имя"
+              size="large"
+            />
+          </el-form-item>
           <el-form-item label="Логин" label-position="top">
             <el-input
               v-model="input"
               class="modal-input"
               placeholder="Логин клиента"
-              size="large"
-            />
-          </el-form-item>
-          <el-form-item label="Пароль" label-position="top">
-            <el-input
-              v-model="input"
-              class="modal-input"
-              placeholder="Пароль клиента"
               size="large"
             />
           </el-form-item>

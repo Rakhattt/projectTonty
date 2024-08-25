@@ -18,26 +18,38 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/sign-up",
         name: "sign-up",
-        component: () => import("../components/moduleInner/AuthComponent/SignUp.vue"),
+        component: () =>
+          import("../components/moduleInner/AuthComponent/SignUp.vue"),
       },
       {
         path: "/sign-in",
         name: "sign-in",
-        component: () => import("../components/moduleInner/AuthComponent/SignIn.vue"),
+        component: () =>
+          import("../components/moduleInner/AuthComponent/SignIn.vue"),
       },
       {
         path: "/login",
         name: "login",
-        component: () => import("../components/moduleInner/AuthComponent/Login.vue"),
+        component: () =>
+          import("../components/moduleInner/AuthComponent/Login.vue"),
       },
       {
         path: "/personal-account",
         name: "personal-account",
-        component: () => import("../components/moduleInner/PersonalAccount.vue"),
+        component: () =>
+          import("../components/moduleInner/PersonalAccount.vue"),
         meta: {
           breadcrumb: "Личный кабинет",
           pageTitle: "Личный кабинет",
         },
+        // children: [
+        //   {
+        //     path: "/id",
+        //     name: "personal-account-details",
+        //     component: () =>
+        //       import("../components/moduleInner/PersonalAccountDetail.vue"),
+        //   },
+        // ],
       },
       {
         path: "/guide",
@@ -46,6 +58,16 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           breadcrumb: "Справочник",
           pageTitle: "Справочник",
+        },
+      },
+      {
+        path: "/personal-account-details/:id",
+        name: "personal-account-details",
+        component: () =>
+          import("../components/moduleInner/PersonalAccountDetail.vue"),
+        meta: {
+          breadcrumb: "Детальная страница",
+          pageTitle: "Детальная страница",
         },
       },
     ],

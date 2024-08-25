@@ -1,6 +1,6 @@
 <template>
   <div class="enroll">
-    <h2 class="enroll_title">Зарегистрироваться</h2>
+    <h2 class="enroll_title">Зарегистрироваться как психолог</h2>
     <div class="d-flex justify-center align-items-center mb-3">
       <p class="enroll_subtitle">У вас уже есть учетная запись?</p>
       <router-link to="sign-in" style="font-weight: 600; color: #495c93;"> Войдите здесь</router-link>

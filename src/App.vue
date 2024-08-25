@@ -8,6 +8,7 @@
       <Breadcrumbs />
       <el-button v-if="$route.name == 'main'" type="primary" size="large" @click="showModal = true">Создать группу</el-button>
       <el-button v-if="$route.name == 'personal-account'" type="primary" size="large" @click="showModalClient = true">Создать логин клиенту</el-button>
+      <el-button v-if="$route.name == 'personal-account-details'" type="danger" size="large">Удалить клиента</el-button>
       <Modal @close="showModal = false" :visible="showModal"/>
       <ModalClient @close="showModalClient = false" :visible="showModalClient" />
     </div>
