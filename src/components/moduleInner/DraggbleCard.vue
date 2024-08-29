@@ -23,11 +23,13 @@
           class="drag-item"
         >
           <el-image
-            :src="item"
+            :src="item.url"
             fit="cover"
             :zoom-rate="1.2"
             :max-scale="7"
             :min-scale="0.2"
+            :preview-src-list="imageUrls(group.images)"
+            :initial-index="itemIndex"
           />
         </div>
       </draggable>
@@ -58,6 +60,9 @@ const isModalVisible = ref(false);
 const groupName = ref("");
 const groupDescription = ref("");
 const currentGroupIndex = ref<number | null>(null);  
+const imageUrls = (images: { url: string }[]) => {
+  return images.map(image => image.url);
+};
 
 const openModal = (group: any, index: number) => {
   groupName.value = group.name;
@@ -70,23 +75,39 @@ const saveGroupName = (name: string, description: string) => {
   if (currentGroupIndex.value !== null) {
     groups.value[currentGroupIndex.value].name = name;
     groups.value[currentGroupIndex.value].description = description;
-    console.log("Updated group:", groups.value[currentGroupIndex.value]);
   }
   isModalVisible.value = false;
 };
+
+const emit = defineEmits<{
+  (e: "delete", deletedImages: { id: number, url: string }[]): void;
+}>();
 
 const deleteGroup = (name: string) => {
   const index = groups.value.findIndex(group => group.name === name);
   if (index !== -1) {
+    const deletedImages = groups.value[index].images;
     groups.value.splice(index, 1);
-    console.log(`Группа "${name}" была удалена.`);
+    emit("delete", deletedImages); // Отправляем удаленные изображения
+    update(deletedImages); // Передаем удаленные изображения в update
   }
   isModalVisible.value = false;
 };
 
-const update = () => {
-  console.log("Lists updated");
+const update = (deletedImages: { id: number, url: string }[]) => {
+  if (deletedImages && deletedImages.length > 0) {
+    // Здесь можно переместить удаленные изображения в нужное место
+    const mainGroup = groups.value.find(group => group.name === 'Main');
+    if (mainGroup) {
+      mainGroup.images.push(...deletedImages);
+      console.log("Lists updated");
+    } else {
+      // Если основной группы нет, создаем новую
+      groups.value.push({ name: 'Main', images: deletedImages });
+    }
+  }
 };
+
 </script>
 
 <style scoped>

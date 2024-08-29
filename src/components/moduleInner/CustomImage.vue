@@ -23,8 +23,9 @@
               <label
                 :for="group.name"
                 :class="{ 'disabled-label': selectedGroups.length > 0 && !selectedGroups.includes(group.name) }"
+                style="cursor: pointer;"
               >
-                {{ group.name }}
+              {{ group.name }}
               </label>
             </div>
           </div>
@@ -36,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { ref, watch, emit } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 
 const props = defineProps({
@@ -58,6 +59,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['removeImage']); // Определение события для удаления изображения
+
 const imageStore = useImageStore();
 const groups = imageStore.groups;
 
@@ -71,9 +74,11 @@ const toggleModal = () => {
 const updateGroup = (groupName: string) => {
   const group = groups.find(g => g.name === groupName);
   if (group) {
-    const index = group.images.indexOf(props.src);
+    const index = group.images.findIndex(image => image.url === props.src);
     if (index === -1 && selectedGroups.value.includes(groupName)) {
-      group.images.push(props.src);
+      group.images.push({ id: new Date().getTime(), url: props.src }); // Генерация уникального ID
+      emit('removeImage', props.src); // Эмитим событие для удаления изображения
+      toggleModal();
     } else if (index !== -1 && !selectedGroups.value.includes(groupName)) {
       group.images.splice(index, 1);
     }
@@ -84,6 +89,7 @@ watch(selectedGroups, (newVal) => {
   newVal.forEach(groupName => updateGroup(groupName));
 });
 </script>
+
 
 <style scoped>
 .image-wrapper {
