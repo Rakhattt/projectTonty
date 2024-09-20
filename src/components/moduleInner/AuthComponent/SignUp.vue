@@ -32,18 +32,7 @@
         prop="email"
         label="Почта"
         label-position="top"
-        :rules="[
-          // {
-          //   required: true,
-          //   message: 'Пожалуйста, введите адрес электронной почты',
-          //   trigger: 'blur',
-          // },
-          {
-            type: 'email',
-            message: 'Пожалуйста, введите правильный адрес электронной почты',
-            trigger: ['blur', 'change'],
-          },
-        ]"
+        :rules="[]"
       >
         <el-input v-model="signUpData.email" />
       </el-form-item>
@@ -57,7 +46,7 @@
           show-password
         />
       </el-form-item>
-      <el-button type="submit primary" class="ml-auto">Зарегистрироваться</el-button>
+      <el-button type="submit" native-type="submit" class="ml-auto">Зарегистрироваться</el-button>
     </el-form>
   </div>
 </template>
@@ -67,8 +56,10 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
 import { ISignUpData } from "../../../type/index";
-const ruleFormRef = ref<FormInstance>();
+import { useAuthenticateStore } from "@/store/authenticateStore";
 
+const ruleFormRef = ref<FormInstance>();
+const store = useAuthenticateStore();
 const signUpData = ref<ISignUpData>({
   firstName: "",
   lastName: "",
@@ -79,7 +70,9 @@ defineProps<ISignUpData>();
 
 const router = useRouter();
 
-const signUp = () => {
+const signUp = async () => {
+  console.log('signUpData.value', signUpData.value)
+  await store.signUpPostStore(signUpData.value)
   router.push({ name: "main" });
 };
 </script>

@@ -59,9 +59,19 @@ const { groups } = storeToRefs(store);
 const isModalVisible = ref(false);
 const groupName = ref("");
 const groupDescription = ref("");
-const currentGroupIndex = ref<number | null>(null);  
-const imageUrls = (images: { url: string }[]) => {
+const currentGroupIndex = ref<number | null>(null);
+
+const imageUrls = (images: { id: number, url: string }[]) => {
   return images.map(image => image.url);
+};
+
+const moveImageToGroup = (image: { id: number; url: string }) => {
+  const targetGroup = groups.value.find(group => group.name === groupName.value);
+  if (targetGroup) {
+    targetGroup.images.push(image);
+    // Уведомляем родительский компонент о перемещении изображения
+    emit('moveImageToGroup', image, targetGroup.name);
+  }
 };
 
 const openModal = (group: any, index: number) => {
@@ -81,6 +91,7 @@ const saveGroupName = (name: string, description: string) => {
 
 const emit = defineEmits<{
   (e: "delete", deletedImages: { id: number, url: string }[]): void;
+  (e: "moveImageToGroup", image: { id: number, url: string }, groupName: string): void;
 }>();
 
 const deleteGroup = (name: string) => {
@@ -88,27 +99,18 @@ const deleteGroup = (name: string) => {
   if (index !== -1) {
     const deletedImages = groups.value[index].images;
     groups.value.splice(index, 1);
-    emit("delete", deletedImages); // Отправляем удаленные изображения
-    update(deletedImages); // Передаем удаленные изображения в update
+    emit("delete", deletedImages); // Отправка удаленных изображений в родительский компонент
   }
   isModalVisible.value = false;
 };
 
-const update = (deletedImages: { id: number, url: string }[]) => {
-  if (deletedImages && deletedImages.length > 0) {
-    // Здесь можно переместить удаленные изображения в нужное место
-    const mainGroup = groups.value.find(group => group.name === 'Main');
-    if (mainGroup) {
-      mainGroup.images.push(...deletedImages);
-      console.log("Lists updated");
-    } else {
-      // Если основной группы нет, создаем новую
-      groups.value.push({ name: 'Main', images: deletedImages });
-    }
-  }
-};
 
+const update = () => {
+  console.log("Group updated");
+};
 </script>
+
+
 
 <style scoped>
 .drag-container {

@@ -1,14 +1,14 @@
 <template>
-  <div class="image-wrapper" @click="toggleModal">
+  <div class="image-wrapper" @click="handleImageClick">
     <img
-      :src="src"
+      :src="image?.url"
       alt="Image"
       class="image"
       :style="{ width: width, height: height, objectFit: fit }"
     />
     <div v-if="isModalVisible" class="modal-overlay" @click="toggleModal">
       <div class="modal-content" @click.stop>
-        <img :src="src" alt="Preview Image" class="modal-image" />
+        <img :src="image.url" alt="Preview Image" class="modal-image" />
         <div class="checkbox-group">
           <div v-for="group in groups" :key="group.name" class="checkbox-item">
             <div>
@@ -37,12 +37,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, emit } from "vue";
+import { ref } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 
 const props = defineProps({
-  src: {
-    type: String,
+  image: {
+    type: Object as () => { id: number, url: string },
     required: true,
   },
   width: {
@@ -59,8 +59,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['removeImage']); // Определение события для удаления изображения
-
+const emit = defineEmits(['moveImageToGroup']);
 const imageStore = useImageStore();
 const groups = imageStore.groups;
 
@@ -71,25 +70,32 @@ const toggleModal = () => {
   isModalVisible.value = !isModalVisible.value;
 };
 
+const handleImageClick = () => {
+  imageStore.setCurrentImage(props.image);  // Устанавливаем текущее изображение в store
+  toggleModal();
+};
+
 const updateGroup = (groupName: string) => {
+  // Находим группу по имени
   const group = groups.find(g => g.name === groupName);
   if (group) {
-    const index = group.images.findIndex(image => image.url === props.src);
+    // Находим индекс изображения в группе по id
+    const index = group.images.findIndex(img => img.id === props.image.id);
+
+    // Добавляем изображение в группу
     if (index === -1 && selectedGroups.value.includes(groupName)) {
-      group.images.push({ id: new Date().getTime(), url: props.src }); // Генерация уникального ID
-      emit('removeImage', props.src); // Эмитим событие для удаления изображения
-      toggleModal();
-    } else if (index !== -1 && !selectedGroups.value.includes(groupName)) {
+      group.images.push(props.image);
+      emit('moveImageToGroup', props.image.id, groupName); // Передаем id изображения
+    }
+    // Удаляем изображение из группы
+    else if (index !== -1 && !selectedGroups.value.includes(groupName)) {
       group.images.splice(index, 1);
+      emit('removeImageFromGroup', props.image.id, groupName); // Передаем id изображения
     }
   }
 };
 
-watch(selectedGroups, (newVal) => {
-  newVal.forEach(groupName => updateGroup(groupName));
-});
 </script>
-
 
 <style scoped>
 .image-wrapper {

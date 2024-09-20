@@ -10,13 +10,13 @@
         status-icon
         label-width="auto"
         class="demo-ruleForm"
-        @submit.prevent="signIn"
+        @submit.prevent="login"
       >
         <el-form-item label="Логин" label-position="top">
           <el-input v-model="signInData.login" placeholder="Логин" />
         </el-form-item>
 
-        <el-button type="submit primary" class="ml-auto"
+        <el-button type="submit" native-type="submit" class="ml-auto"
           >Войти</el-button
         >
       </el-form>
@@ -28,15 +28,18 @@
   import { useRouter } from "vue-router";
   import type { FormInstance } from "element-plus";
   import { ILogin } from "../../../type/index";
+  import { useAuthenticateStore } from "@/store/authenticateStore";
+
   const ruleFormRef = ref<FormInstance>();
-  
+    const store = useAuthenticateStore();
   const signInData = ref<ILogin>({
     login: "",
   });
   defineProps<ILogin>();
   const router = useRouter();
   
-  const signIn = () => {
+  const login = async () => {
+    await store.loginPostStore(signInData.value.login);
       router.push({ name: "main" });
   };
   </script>

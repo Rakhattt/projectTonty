@@ -1,27 +1,30 @@
-// stores/useImageStore.ts
+// useImageStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-interface Image {
+export interface Image {
   id: number;
   url: string;
 }
 
-interface Group {
+export interface Group {
   name: string;
   images: Image[];
 }
 
 export const useImageStore = defineStore('imageStore', () => {
   const groups = ref<Group[]>([]);
+  const currentImage = ref<Image | null>(null);
 
-  const addGroup = (name: string, images: string[]) => {
-    const imageObjects = images.map((url, index) => ({
-      id: index + 1, // Generate an ID for each image (you may want to change this logic)
-      url,
-    }));
-    groups.value.push({ name, images: imageObjects });
+
+  const setCurrentImage = (image: Image) => {
+    currentImage.value = image;
   };
 
-  return { groups, addGroup };
+  const addGroup = (name: string, images: Image[]) => {
+    groups.value.push({ name, images });
+    console.log('groups',groups)
+  };
+
+  return { groups, currentImage, setCurrentImage, addGroup };
 });

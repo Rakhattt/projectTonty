@@ -37,3 +37,7 @@ export interface IPropsModalClient {
   password: string;
   visible: boolean;
 }
+export interface IloginCreate {
+  login: string,
+  name: string;
+}

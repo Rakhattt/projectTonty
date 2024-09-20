@@ -11,7 +11,7 @@
         <div class="modal-py">
           <el-form-item label="Имя" label-position="top">
             <el-input
-              v-model="input"
+              v-model="loginCreate.name"
               class="modal-input"
               placeholder="Имя"
               size="large"
@@ -19,7 +19,7 @@
           </el-form-item>
           <el-form-item label="Логин" label-position="top">
             <el-input
-              v-model="input"
+              v-model="loginCreate.login"
               class="modal-input"
               placeholder="Логин клиента"
               size="large"
@@ -28,7 +28,7 @@
           <el-button
             type="primary"
             plain
-            @click="createdClient()"
+            @click="createClient()"
             class="modal-button"
             >Создать</el-button
           >
@@ -40,11 +40,19 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { IPropsModalClient } from "../../../type/index";
+import { IPropsModalClient, IloginCreate } from "../../../type/index";
 import { ElNotification } from "element-plus";
+import { useAuthenticateStore } from "@/store/authenticateStore";
 
-const input = ref("");
-defineProps<IPropsModalClient>();
+const store = useAuthenticateStore();
+
+const loginCreate = ref<IloginCreate>({
+  login: "",
+  name: "",
+});
+type CombinedProps = IloginCreate & IPropsModalClient;
+
+defineProps<CombinedProps>();
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
@@ -53,7 +61,8 @@ const closeModal = () => {
   emit("close");
 };
 
-const createdClient = () => {
+const createClient = async() => {
+  await store.createloginPostStore(loginCreate.value);
   closeModal();
   ElNotification({
     title: "",
