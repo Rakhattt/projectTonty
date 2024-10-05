@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { signUpPost,loginPost, createloginPost } from "@/services/authenticate";
-import type { ISignUpData, IloginCreate } from "@/type/index";
+// import type { IloginCreate } from "@/type/index";
 
 export const useAuthenticateStore = defineStore("authenticateStore", () => {
 
-  const signUpPostStore = async (signUpData: ISignUpData) => {
+  const signUpPostStore = async (objData: any) => {
     try {
-      const response = await signUpPost(signUpData);
+      const response = await signUpPost(objData);
       return response;
     } catch (error) {
       console.error("Ошибка при регистрации:", error);
@@ -18,16 +18,16 @@ export const useAuthenticateStore = defineStore("authenticateStore", () => {
         const response = await loginPost(login);
         return response;
       } catch (error) {
-        console.error("Ошибка при загрузке изображений:", error);
+        console.error("Ошибка при загрузке:", error);
       }
   };
 
-  const createloginPostStore = async (loginCreate: IloginCreate) => {
+  const createloginPostStore = async (objData: any) => {
     try {
-        const response = await createloginPost(loginCreate);
+        const response = await createloginPost(objData);
         return response;
       } catch (error) {
-        console.error("Ошибка при загрузке изображений:", loginCreate);
+        console.error("Ошибка при загрузке:", objData);
       }
   }
 

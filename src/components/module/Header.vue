@@ -12,26 +12,14 @@
         </ul>
         <div class="ml-20">
           <el-popover
-            :width="300"
-            popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;"
+            placement="top-start"
+            :width="250"
+            trigger="hover"
+            content="Это Ваш личный кабинет. Здесь вы можете добавлять,
+                  редактировать, удалять своих клиентов."
           >
-            <template #reference
-              ><div class="title">Личный кабинет</div></template
-            >
-            <template #default>
-              <div style="display: flex; gap: 16px; flex-direction: column">
-                <router-link
-                  to="/personal-account"
-                  class="d-flex align-items-center person"
-                >
-                  <el-icon style="margin-right: 5px"><UserFilled /></el-icon>
-                  <p>Tolganay Bayetova</p>
-                </router-link>
-                <p style="color: #e6a23c">
-                  Это Ваш личный кабинет. Здесь вы можете добавлять,
-                  редактировать, удалять своих клиентов.
-                </p>
-              </div>
+            <template #reference>
+              <router-link to="/personal-account" class="person"> Личный кабинет </router-link>
             </template>
           </el-popover>
         </div>
@@ -57,11 +45,10 @@ defineProps<ILinksHeader>();
   color: #fff;
 }
 .person {
-  font-weight: 500;
-  color: black;
+  font-size: 16px;
+  color: #fff;
+  text-decoration: none;
   transition: 0.3s;
-}
-.person:hover {
-  color: #2667ff;
+  font-weight: 500;
 }
 </style>

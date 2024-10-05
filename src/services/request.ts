@@ -6,7 +6,6 @@ export const getCards = async () => {
     const { data } = await apiAxios.get(
       `http://localhost:8000/images`
     );
-
     if (data) {
       ElNotification({
         title: "Запрос был отправлен",

@@ -71,8 +71,16 @@ defineProps<ISignUpData>();
 const router = useRouter();
 
 const signUp = async () => {
-  console.log('signUpData.value', signUpData.value)
-  await store.signUpPostStore(signUpData.value)
+  let objData = {
+    username: signUpData.value.email,
+    password: signUpData.value.password,
+    first_name: signUpData.value.firstName,
+    last_name: signUpData.value.lastName,
+    email: signUpData.value.email,
+    user_type: 2
+  }
+
+  await store.signUpPostStore(objData)
   router.push({ name: "main" });
 };
 </script>

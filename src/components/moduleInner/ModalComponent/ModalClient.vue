@@ -62,7 +62,15 @@ const closeModal = () => {
 };
 
 const createClient = async() => {
-  await store.createloginPostStore(loginCreate.value);
+  let objData = {
+    "username": loginCreate.value.login,
+    "password": "",
+    "first_name": loginCreate.value.name,
+    "last_name": "",
+    "email": "",
+    "user_type": 3
+  }
+  await store.createloginPostStore(objData);
   closeModal();
   ElNotification({
     title: "",
