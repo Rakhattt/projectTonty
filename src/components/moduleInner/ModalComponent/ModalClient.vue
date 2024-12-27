@@ -41,7 +41,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { IPropsModalClient, IloginCreate } from "../../../type/index";
-import { ElNotification } from "element-plus";
 import { useAuthenticateStore } from "@/store/authenticateStore";
 
 const store = useAuthenticateStore();
@@ -53,6 +52,7 @@ const loginCreate = ref<IloginCreate>({
 type CombinedProps = IloginCreate & IPropsModalClient;
 
 defineProps<CombinedProps>();
+
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
@@ -63,19 +63,12 @@ const closeModal = () => {
 
 const createClient = async() => {
   let objData = {
-    "username": loginCreate.value.login,
-    "password": "",
-    "first_name": loginCreate.value.name,
-    "last_name": "",
-    "email": "",
-    "user_type": 3
+    name: loginCreate.value.login,
+    login: loginCreate.value.name,
+    user_type: 1,
+    user_id: localStorage.getItem("user_id"),
   }
   await store.createloginPostStore(objData);
   closeModal();
-  ElNotification({
-    title: "",
-    message: "Вы создали логин клиенту!",
-    type: "success",
-  });
 };
 </script>

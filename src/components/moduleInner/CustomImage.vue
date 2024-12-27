@@ -55,7 +55,7 @@ const props = defineProps({
   },
   fit: {
     type: String,
-    default: "cover",
+    default: "contain",
   },
 });
 
@@ -134,7 +134,7 @@ const updateGroup = (groupName: string) => {
 }
 
 .modal-image {
-  width: 100%;
+  width: 80%;
   height: auto;
 }
 

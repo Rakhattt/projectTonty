@@ -26,7 +26,7 @@ export interface ILogin {
 }
 export interface ISignInData {
   email: string;
-  code: string;
+  password: string;
 }
 export interface ILinksHeader {
   title: string,

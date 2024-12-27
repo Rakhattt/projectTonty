@@ -15,42 +15,59 @@
             placeholder="Наименование группы"
             size="large"
           />
-          <el-button type="primary" plain @click="saveGroup" class="modal-button"
+          <el-input
+            v-model="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            type="textarea"
+            placeholder="Введите описание"
+            style="margin-top: 20px;"
+          />
+          <el-button type="primary" plain @click="createGroup" class="modal-button"
             >Сохранить</el-button
           >
         </div>
       </div>
     </div>
   </transition>
+  <!-- <DraggableCard v-for="group in groups" :key="group.id" :group="group" :imageGroupId="imageGroupId" /> -->
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 import { IPropsModal } from "@/type/index.ts";
-import { ElNotification } from 'element-plus'
-
+import { storeToRefs } from "pinia";
+// import DraggableCard from "../DraggbleCard.vue";
+const store = useImageStore();
 const input = ref("");
+const textarea = ref("");
+const imageGroupId = ref(null);
 defineProps<IPropsModal>();
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
+const { groups } = storeToRefs(store);
 
 const closeModal = () => {
   emit("close");
 };
 
-const saveGroup = () => {
-  const store = useImageStore();
+const createGroup = async ()  => {
   if (input.value) {
-    store.addGroup(input.value, []);
-    closeModal();
-    input.value = "";
-    ElNotification({
-    title: '',
-    message: 'Вы создали группу!',
-    type: 'success',
-  })
+    store.addGroup(input.value, [], textarea.value);
+    let objData = {
+        name: input.value,
+        comment: textarea.value,
+        client_id: 1
+      }
+      let resp = await store.createGroupPostStore(objData);
+      if(resp.success == true){
+        imageGroupId.value = resp.image_group_id;
+        store.setImageGroupId(imageGroupId);
+        closeModal();
+        input.value = "";
+        textarea.value = "";
+      }
   }
 };
 </script>

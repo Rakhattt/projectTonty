@@ -1,14 +1,13 @@
 <template>
   <div class="enroll">
     <h2 class="enroll_title">Войти в систему как психолог</h2>
-    <div
+    <!-- <div
       class="mb-3 undertitle tac"
-      v-show="step === 1"
     >
       Введите 6-значный код, отправленный на <span style="color: #e6a23c;">{{ signInData.email }}</span>, чтобы
       выполнить вход.
-    </div>
-    <div v-if="step === 0">
+    </div> -->
+    <div>
       <div class="d-flex justify-center align-items-center mb-3">
         <p class="enroll_subtitle">
           Новый пользователь?
@@ -23,11 +22,13 @@
         status-icon
         label-width="auto"
         class="demo-ruleForm"
+        @submit.prevent="signIn"
       >
         <el-form-item
           prop="email"
           label="Почта"
           label-position="top"
+          placeholder="Почта"
           :rules="[
             {
               type: 'email',
@@ -39,9 +40,18 @@
           <el-input v-model="signInData.email" />
         </el-form-item>
 
+        <el-form-item label="Пароль" label-position="top">
+        <el-input
+          v-model="signInData.password"
+          required
+          type="password"
+          placeholder="Пароль"
+          show-password
+        />
+      </el-form-item>
+
         <el-button
-          @click="sendCode()"
-          type="warning"
+          type="submit" native-type="submit"
           style="margin: 0 auto; display: block"
         >
           <el-icon style="margin-right: 5px"><Message /></el-icon>
@@ -50,7 +60,7 @@
       </el-form>
     </div>
 
-    <transition name="slide-fade">
+    <!-- <transition name="slide-fade">
       <div v-show="step === 1">
         <div class="d-flex justify-center align-items-center mb-3"></div>
         <el-form
@@ -86,7 +96,7 @@
           <el-button @click="step--" style="margin-top: 10px;"><el-icon style="margin-right: 5px;"><Back /></el-icon>Назад</el-button>
         </el-form>
       </div>
-    </transition>
+    </transition> -->
   </div>
 </template>
 
@@ -95,43 +105,56 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
 import { ISignInData } from "../../../type/index";
+import { useAuthenticateStore } from "@/store/authenticateStore"
 
 const ruleFormRef = ref<FormInstance>();
+const store = useAuthenticateStore();
 const signInData = ref<ISignInData>({
   email: "",
-  code: "",
+  password: "",
 });
 
 defineProps<ISignInData>();
 
 const router = useRouter();
-const step = ref<number>(0);
-const timerSec = ref<number>(30);
-let timerInterval: ReturnType<typeof setInterval>;
+// const step = ref<number>(0);
+// const timerSec = ref<number>(30);
+// let timerInterval: ReturnType<typeof setInterval>;
 
-const nextStep = () => {
-  step.value++;
-};
+// const nextStep = () => {
+//   step.value++;
+// };
 
-const signIn = () => {
-  router.push({ name: "main" });
-};
-
-const sendCode = () => {
-  nextStep();
-  startTimer();
-};
-
-const startTimer = () => {
-  timerSec.value = 30; 
-  timerInterval = setInterval(() => {
-    if (timerSec.value > 0) {
-      timerSec.value--;
-    } else {
-      clearInterval(timerInterval);
+// const signIn = () => {
+//   router.push({ name: "main" });[\]
+// };
+const signIn = async () => {
+    let objData = {
+      email: signInData.value.email,
+      password: signInData.value.password,
+      username: signInData.value.email,
     }
-  }, 1000);
-};
+    let resp = await store.signInPostStore(objData);
+
+      if(resp.access){
+        store.signInTokenStore(resp.access);
+      }
+  };
+// const sendCode = () => {
+//   nextStep();
+//   startTimer();
+// };
+
+// const startTimer = () => {
+//   timerSec.value = 30; 
+//   timerInterval = setInterval(() => {
+//     if (timerSec.value > 0) {
+//       timerSec.value--;
+//     } else {
+//       clearInterval(timerInterval);
+//     }
+//   }, 1000);
+// };
 </script>
 <style>
 .mb-3 {

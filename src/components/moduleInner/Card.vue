@@ -8,6 +8,7 @@
       @delete="handleImagesDeleted"
     >
       <div v-for="item in internalList" :key="item.id">
+        {{ item.id }}
         <div class="demo-image__preview drag-item">
           <CustomImage
             :image="item"
@@ -41,8 +42,15 @@ watch(
   { immediate: true }
 );
 
-const handleDrop = () => {
-  console.log("Images dropped", internalList.value);
+const handleDrop = async (event: any, payload: any) => {
+  const movedItem = internalList.value[event.oldIndex];
+  const movedItemId = movedItem.id - 1;
+  const imageGroupId = payload.imageGroupId;
+  let objData = {
+        image_id: movedItemId,
+        image_group_id: imageGroupId,
+      }
+  await storeImage.addImageGroupPostStore(objData);
 };
 const handleImagesDeleted = (deletedImages: { id: number, url: string }[]) => {
   internalList.value.push(...deletedImages);
@@ -71,7 +79,6 @@ const handleRemoveImageFromGroup = (imageId: number, groupName: string) => {
   if (group) {
     const imageIndex = internalList.value.findIndex(img => img.id === imageId);
     if (imageIndex === -1) {
-      // Если изображение не в основном списке, добавляем его
       const image = storeImage.images.find(img => img.id === imageId);
       if (image) {
         internalList.value.push(image);

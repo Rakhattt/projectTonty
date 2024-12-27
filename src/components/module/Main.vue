@@ -39,7 +39,7 @@ const handleDeletedImages = (deletedImages: string[]) => {
 };
 
 const updateImages = (newImages) => {
-  // console.log("imagesList.value", store.imagesList);
+  console.log("imagesList.value", store.imagesList);
 };
 </script>
 

@@ -11,11 +11,12 @@
           <EditPen />
         </el-icon>
       </div>
+      imageGroupId: {{ imageGroupId }}
       <draggable
         v-model="group.images"
         group="images"
         class="drag-container"
-        @end="update"
+        @end="handleDrop"
       >
         <div
           v-for="(item, itemIndex) in group.images"
@@ -30,6 +31,7 @@
             :min-scale="0.2"
             :preview-src-list="imageUrls(group.images)"
             :initial-index="itemIndex"
+            class="dragg-img"
           />
         </div>
       </draggable>
@@ -48,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 import { storeToRefs } from "pinia";
 import ModalDragg from "@/components/moduleInner/ModalComponent/ModalDragg.vue";
@@ -61,15 +63,25 @@ const groupName = ref("");
 const groupDescription = ref("");
 const currentGroupIndex = ref<number | null>(null);
 
+  const props = defineProps({
+  // group: {
+  //   type: Object,
+  //   required: true,
+  // },
+  imageGroupId: {
+    type: [Number, null],
+    required: true,
+  },
+});
 const imageUrls = (images: { id: number, url: string }[]) => {
   return images.map(image => image.url);
 };
+const imageGroupId = computed(() => store.currentImageGroupId);
 
 const moveImageToGroup = (image: { id: number; url: string }) => {
   const targetGroup = groups.value.find(group => group.name === groupName.value);
   if (targetGroup) {
     targetGroup.images.push(image);
-    // Уведомляем родительский компонент о перемещении изображения
     emit('moveImageToGroup', image, targetGroup.name);
   }
 };
@@ -90,6 +102,7 @@ const saveGroupName = (name: string, description: string) => {
 };
 
 const emit = defineEmits<{
+  (e: "card-dropped", payload: { imageGroupId: number; movedItem: { id: number; url: string } }): void;
   (e: "delete", deletedImages: { id: number, url: string }[]): void;
   (e: "moveImageToGroup", image: { id: number, url: string }, groupName: string): void;
 }>();
@@ -105,14 +118,25 @@ const deleteGroup = (name: string) => {
 };
 
 
-const update = () => {
-  console.log("Group updated");
+const handleDrop = (event) => {
+  // const movedItem = group.images[event.oldIndex];
+  emit("card-dropped", { imageGroupId: props.imageGroupId, movedItem });
 };
+
 </script>
 
 
 
 <style scoped>
+.dragg-img {
+  width: 200px;
+  height: 200px;
+}
+.dragg-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 .drag-container {
   width: 250px;
   min-height: 100px;

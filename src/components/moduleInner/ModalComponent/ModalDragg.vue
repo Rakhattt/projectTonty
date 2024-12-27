@@ -39,29 +39,37 @@
   <script lang="ts" setup>
   import { ref } from "vue";
   import { ElNotification } from "element-plus";
-  
+  import { useImageStore } from "@/store/useImageStore";
+
+  const store = useImageStore();
   const props = defineProps<{
     visible: boolean;
     initialInput: string;
-    initialDescription?: string;
+    initialDescription: string;
   }>();
   
   const emit = defineEmits<{
     (e: "close"): void;
     (e: "save", name: string, description: string): void;
-    (e: "delete", name: string): void;
+    (e: "delete", name: string, description: string): void;
   }>();
   
   const inputDragg = ref(props.initialInput || "");
-  const textareaDragg = ref(props.initialDescription ?? "");
+  const textareaDragg = ref(props.initialDescription || "");
   
   const closeModal = () => {
     emit("close");
   };
   
-  const saveGroup = () => {
+  const saveGroup = async () => {
     if (inputDragg.value) {
       emit("save", inputDragg.value, textareaDragg.value);
+      let objData = {
+        name: inputDragg.value,
+        comment: textareaDragg.value,
+        image_group_id: 3,
+      }
+      await store.saveNameAndDescPutStore(objData);
       closeModal();
       ElNotification({
         title: "",
@@ -71,9 +79,10 @@
     }
   };
   
-  const deleteGroup = () => {
+  const deleteGroup = async () => {
     if (inputDragg.value) {
-      emit("delete", inputDragg.value);
+      emit("delete", inputDragg.value, textareaDragg.value);
+      await store.groupDeleteStore();
       closeModal();
       ElNotification({
         title: "",

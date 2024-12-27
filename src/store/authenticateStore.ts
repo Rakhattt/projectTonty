@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { signUpPost,loginPost, createloginPost } from "@/services/authenticate";
+import { signUpPost,loginPost, createloginPost, signInPost, signInToken } from "@/services/authenticate";
 // import type { IloginCreate } from "@/type/index";
 
 export const useAuthenticateStore = defineStore("authenticateStore", () => {
@@ -31,5 +31,23 @@ export const useAuthenticateStore = defineStore("authenticateStore", () => {
       }
   }
 
-  return { signUpPostStore, loginPostStore, createloginPostStore };
+  const signInPostStore = async (objData: any) => {
+    try {
+      const response = await signInPost(objData);
+      return response;
+    } catch (error) {
+      console.error("Ошибка при загрузке:", objData);
+    }
+  }
+
+  const signInTokenStore = async (objData: any) => {
+    try {
+      const response = await signInToken(objData);
+      return response;
+    } catch (error) {
+      console.error("Ошибка при загрузке:", objData);
+    }
+  }
+
+  return { signUpPostStore, loginPostStore, createloginPostStore, signInPostStore, signInTokenStore };
 });

@@ -3,7 +3,9 @@
     <h2 class="enroll_title">Зарегистрироваться как психолог</h2>
     <div class="d-flex justify-center align-items-center mb-3">
       <p class="enroll_subtitle">У вас уже есть учетная запись?</p>
-      <router-link to="sign-in" style="font-weight: 600; color: #495c93;"> Войдите здесь</router-link>
+      <router-link to="sign-in" style="font-weight: 600; color: #495c93"
+        >Войдите здесь</router-link
+      >
     </div>
     <el-form
       ref="ruleFormRef"
@@ -16,6 +18,7 @@
       <div class="d-flex justify-content-between">
         <el-form-item label="Имя" label-position="top">
           <el-input
+            required
             v-model="signUpData.firstName"
             style="width: 260px"
             placeholder="Имя"
@@ -23,6 +26,7 @@
         </el-form-item>
         <el-form-item label="Фамилия" label-position="top">
           <el-input
+            required
             v-model="signUpData.lastName"
             style="width: 260px"
             placeholder="Фамилия"
@@ -32,7 +36,7 @@
         prop="email"
         label="Почта"
         label-position="top"
-        :rules="[]"
+        required
       >
         <el-input v-model="signUpData.email" />
       </el-form-item>
@@ -46,7 +50,9 @@
           show-password
         />
       </el-form-item>
-      <el-button type="submit" native-type="submit" class="ml-auto">Зарегистрироваться</el-button>
+      <el-button type="submit" native-type="submit" class="ml-auto"
+        >Зарегистрироваться</el-button
+      >
     </el-form>
   </div>
 </template>
@@ -77,11 +83,14 @@ const signUp = async () => {
     first_name: signUpData.value.firstName,
     last_name: signUpData.value.lastName,
     email: signUpData.value.email,
-    user_type: 2
-  }
+    user_type: 2,
+  };
 
-  await store.signUpPostStore(objData)
-  router.push({ name: "main" });
+  let resp = await store.signUpPostStore(objData);
+
+  if (resp.success == true) {
+    router.push({ name: "personal-account" });
+  }
 };
 </script>
 <style scoped>

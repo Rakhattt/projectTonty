@@ -7,14 +7,12 @@ export const getCards = async () => {
       `http://localhost:8000/images`
     );
     if (data) {
-      ElNotification({
-        title: "Запрос был отправлен",
-        message: "Пожалуйста, подождите",
-        type: "success",
-      });
+      // ElNotification({
+      //   title: "Запрос был отправлен",
+      //   message: "Пожалуйста, подождите",
+      //   type: "success",
+      // });
     }
-
-    // Возвращаем данные, чтобы их можно было использовать в других частях приложения
     return data;
   } catch (error) {
     ElNotification({
@@ -22,8 +20,6 @@ export const getCards = async () => {
       message: "Произошла ошибка при загрузке данных",
       type: "warning",
     });
-
-    // В случае ошибки возвращаем пустой массив или null
     return [];
   }
 };
