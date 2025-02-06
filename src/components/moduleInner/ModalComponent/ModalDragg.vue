@@ -46,6 +46,7 @@
     visible: boolean;
     initialInput: string;
     initialDescription: string;
+    initialImageGroupId: number
   }>();
   
   const emit = defineEmits<{
@@ -56,7 +57,7 @@
   
   const inputDragg = ref(props.initialInput || "");
   const textareaDragg = ref(props.initialDescription || "");
-  
+
   const closeModal = () => {
     emit("close");
   };
@@ -67,39 +68,32 @@
       let objData = {
         name: inputDragg.value,
         comment: textareaDragg.value,
-        image_group_id: 3,
+        image_group_id: props.initialImageGroupId,
       }
-      await store.saveNameAndDescPutStore(objData);
+     await store.saveNameAndDescPutStore(objData);
       closeModal();
-      ElNotification({
-        title: "",
-        message: "Вы обновили текст группы!",
-        type: "success",
-      });
     }
   };
   
   const deleteGroup = async () => {
     if (inputDragg.value) {
       emit("delete", inputDragg.value, textareaDragg.value);
-      await store.groupDeleteStore();
+      let resp = await store.groupDeleteStore(props.initialImageGroupId);
+      if(resp.success == true){
+        store.getImageGroupStore();
+      }
       closeModal();
-      ElNotification({
-        title: "",
-        message: "Группа удалена!",
-        type: "warning",
-      });
     }
   };
   </script>
   
-  <style scoped>
-  .modal-input {
-    margin-bottom: 20px;
-  }
-  
-.mt-4 {
-    padding-top: 40px;
+<style scoped>
+.modal-input {
+  margin-bottom: 20px;
 }
-  </style>
+
+.mt-4 {
+  padding-top: 40px;
+}
+</style>
   

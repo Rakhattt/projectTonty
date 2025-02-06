@@ -3,10 +3,11 @@
     <div class="container">
       <Loading :active="loading" />
       <div class="d-flex justify-content-between mt-10">
-        <Card />
+        <Card :moved-item-id="movedItemId"/>
         <DraggableCard
           @delete="handleDeletedImages" 
-          @update="updateImages" />
+          @update="updateImages"
+          @item-moved="handleItemMoved" />
       </div>
     </div>
   </main>
@@ -21,7 +22,11 @@ import { useRequestStore } from "@/store/requestStore";
 
 const store = useRequestStore();
 const loading = ref(false);
+const movedItemId = ref<number | null>(null);
 
+const handleItemMoved = ({ itemId }: { itemId: number }) => {
+  movedItemId.value = itemId;
+};
 onMounted(async () => {
   loading.value = true;
   try {
@@ -39,7 +44,7 @@ const handleDeletedImages = (deletedImages: string[]) => {
 };
 
 const updateImages = (newImages) => {
-  console.log("imagesList.value", store.imagesList);
+  console.log("imagesList.value AAAAAA", store.imagesList);
 };
 </script>
 

@@ -42,14 +42,6 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumb: "Личный кабинет",
           pageTitle: "Личный кабинет",
         },
-        // children: [
-        //   {
-        //     path: "/id",
-        //     name: "personal-account-details",
-        //     component: () =>
-        //       import("../components/moduleInner/PersonalAccountDetail.vue"),
-        //   },
-        // ],
       },
       {
         path: "/guide",

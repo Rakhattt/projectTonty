@@ -3,7 +3,7 @@
     <router-view />
   </div>
   <div v-else>
-    <Header />
+    <Header class="header_main"/>
     <div class="container d-flex justify-content-between align-items-center">
       <Breadcrumbs />
       <el-button
@@ -49,17 +49,19 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import Header from "./components/module/Header.vue";
 import Breadcrumbs from "./components/ui/Breadcrumbs.vue";
 import Modal from "./components/moduleInner/ModalComponent/Modal.vue";
 import ModalClient from "./components/moduleInner/ModalComponent/ModalClient.vue";
 import { InfoFilled } from "@element-plus/icons-vue";
+import { useImageStore } from "@/store/useImageStore";
 
+const store = useImageStore();
 const showModal = ref(false);
 const showModalClient = ref(false);
 const route = useRoute();
-
+const router = useRouter();
 const isAuthPage = computed(() => {
   return (
     route.name === "sign-up" ||
@@ -68,8 +70,9 @@ const isAuthPage = computed(() => {
   );
 });
 
-const confirmEvent = () => {
-  console.log("confirm!");
+const confirmEvent = async () => {
+  await store.clientDeleteStore();
+  // router.push({ name: "personal-account" });
 };
 const cancelEvent = () => {
   console.log("cancel!");

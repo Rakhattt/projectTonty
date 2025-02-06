@@ -42,13 +42,15 @@
 import { ref } from "vue";
 import { IPropsModalClient, IloginCreate } from "../../../type/index";
 import { useAuthenticateStore } from "@/store/authenticateStore";
-
+import { useImageStore } from "@/store/useImageStore";
 const store = useAuthenticateStore();
+const clientStore = useImageStore();
 
 const loginCreate = ref<IloginCreate>({
   login: "",
   name: "",
 });
+
 type CombinedProps = IloginCreate & IPropsModalClient;
 
 defineProps<CombinedProps>();
@@ -59,6 +61,8 @@ const emit = defineEmits<{
 
 const closeModal = () => {
   emit("close");
+  loginCreate.value.name = '';
+  loginCreate.value.login = '';
 };
 
 const createClient = async() => {
@@ -68,7 +72,14 @@ const createClient = async() => {
     user_type: 1,
     user_id: localStorage.getItem("user_id"),
   }
-  await store.createloginPostStore(objData);
+  let resp = await store.createloginPostStore(objData);
+  if(resp.success == true){
+    clientStore.addClient({
+      id: resp.user_id,
+      name: loginCreate.value.name,
+      login: loginCreate.value.login,
+    });
+  }
   closeModal();
 };
 </script>

@@ -64,8 +64,8 @@ export const saveNameAndDescPut = async (objData: any) => {
 
     if (data) {
       ElNotification({
-        title: "Данные обновлены!",
-        message: "Пожалуйста, подождите",
+        title: "",
+        message: "Вы обновили текст группы!",
         type: "success",
       });
     }
@@ -85,17 +85,87 @@ export const saveNameAndDescPut = async (objData: any) => {
 export const groupDelete = async (id: any) => {
   try {
     const { data } = await apiAxios.delete(
-      `http://localhost:8000/delete_image_group`,
-      id
+      `http://localhost:8000/delete_image_group/${id}`,
     );
 
     if (data) {
       ElNotification({
-        title: "Удалено АА!",
+        title: "",
+        message: "Группа удалена!",
+        type: "warning",
+      });
+    }
+
+    return data;
+  } catch (error) {
+    ElNotification({
+      title: "Ошибка",
+      message: "Произошла ошибка при загрузке данных",
+      type: "warning",
+    });
+
+    return [];
+  }
+};
+
+export const clientDelete = async (id: any) => {
+  try {
+    const { data } = await apiAxios.delete(
+      `http://localhost:8000/delete_client/${id}`,
+    );
+
+    if (data) {
+      ElNotification({
+        title: "",
+        message: "Группа удалена!",
+        type: "warning",
+      });
+    }
+
+    return data;
+  } catch (error) {
+    ElNotification({
+      title: "Ошибка",
+      message: "Произошла ошибка при загрузке данных",
+      type: "warning",
+    });
+
+    return [];
+  }
+};
+
+export const deleteImageFromGroup = async (image_id: number) => {
+  try {
+    const { data } = await apiAxios.delete(
+      `http://localhost:8000/delete_image_from_group/${image_id}`,
+    );
+
+    if (data) {
+      ElNotification({
+        title: "Удалено УРА!",
         message: "Пожалуйста, подождите",
         type: "success",
       });
     }
+
+    return data;
+  } catch (error) {
+    ElNotification({
+      title: "Ошибка",
+      message: "Произошла ошибка при загрузке данных",
+      type: "warning",
+    });
+
+    return [];
+  }
+};
+
+export const getImageGroup = async () => {
+  const user_id = localStorage.getItem("user_id")
+  try {
+    const { data } = await apiAxios.get(
+      `http://localhost:8000/get_image_groups/${user_id}`,
+    );
 
     return data;
   } catch (error) {

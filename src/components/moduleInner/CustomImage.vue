@@ -71,26 +71,22 @@ const toggleModal = () => {
 };
 
 const handleImageClick = () => {
-  imageStore.setCurrentImage(props.image);  // Устанавливаем текущее изображение в store
+  imageStore.setCurrentImage(props.image);
   toggleModal();
 };
 
 const updateGroup = (groupName: string) => {
-  // Находим группу по имени
   const group = groups.find(g => g.name === groupName);
   if (group) {
-    // Находим индекс изображения в группе по id
     const index = group.images.findIndex(img => img.id === props.image.id);
 
-    // Добавляем изображение в группу
     if (index === -1 && selectedGroups.value.includes(groupName)) {
       group.images.push(props.image);
-      emit('moveImageToGroup', props.image.id, groupName); // Передаем id изображения
+      emit('moveImageToGroup', props.image.id, groupName);
     }
-    // Удаляем изображение из группы
     else if (index !== -1 && !selectedGroups.value.includes(groupName)) {
       group.images.splice(index, 1);
-      emit('removeImageFromGroup', props.image.id, groupName); // Передаем id изображения
+      emit('removeImageFromGroup', props.image.id, groupName);
     }
   }
 };

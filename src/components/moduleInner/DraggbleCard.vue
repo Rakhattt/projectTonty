@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-for="(group, index) in groups" :key="index" class="mb-10">
+      <!-- <pre>{{ group }}</pre> -->
       <div class="d-flex justify-content-between mb-2">
         <input
           type="text"
@@ -11,17 +12,18 @@
           <EditPen />
         </el-icon>
       </div>
-      imageGroupId: {{ imageGroupId }}
       <draggable
         v-model="group.images"
         group="images"
         class="drag-container"
-        @end="handleDrop"
+        @add="handleDropEnd(group.imageGroupId, $event)"
+        @end="handleDropEmit($event)"
       >
         <div
           v-for="(item, itemIndex) in group.images"
           :key="itemIndex"
           class="drag-item"
+          :data-id="item.id"
         >
           <el-image
             :src="item.url"
@@ -42,6 +44,7 @@
       :visible.sync="isModalVisible"
       :initial-input="groupName"
       :initial-description="groupDescription"
+      :initial-imageGroupId="imageGroupId"
       @close="isModalVisible = false"
       @save="saveGroupName"
       @delete="deleteGroup"
@@ -50,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useImageStore } from "@/store/useImageStore";
 import { storeToRefs } from "pinia";
 import ModalDragg from "@/components/moduleInner/ModalComponent/ModalDragg.vue";
@@ -61,22 +64,12 @@ const { groups } = storeToRefs(store);
 const isModalVisible = ref(false);
 const groupName = ref("");
 const groupDescription = ref("");
+const imageGroupId = ref<number>();
 const currentGroupIndex = ref<number | null>(null);
 
-  const props = defineProps({
-  // group: {
-  //   type: Object,
-  //   required: true,
-  // },
-  imageGroupId: {
-    type: [Number, null],
-    required: true,
-  },
-});
 const imageUrls = (images: { id: number, url: string }[]) => {
   return images.map(image => image.url);
 };
-const imageGroupId = computed(() => store.currentImageGroupId);
 
 const moveImageToGroup = (image: { id: number; url: string }) => {
   const targetGroup = groups.value.find(group => group.name === groupName.value);
@@ -88,15 +81,16 @@ const moveImageToGroup = (image: { id: number; url: string }) => {
 
 const openModal = (group: any, index: number) => {
   groupName.value = group.name;
-  groupDescription.value = group.description || "";
+  groupDescription.value = group.textarea || "";
+  imageGroupId.value = group.imageGroupId;
   currentGroupIndex.value = index;
   isModalVisible.value = true;
 };
 
-const saveGroupName = (name: string, description: string) => {
+const saveGroupName = (name: string, textarea: string) => {
   if (currentGroupIndex.value !== null) {
     groups.value[currentGroupIndex.value].name = name;
-    groups.value[currentGroupIndex.value].description = description;
+    groups.value[currentGroupIndex.value].textarea = textarea;
   }
   isModalVisible.value = false;
 };
@@ -105,6 +99,7 @@ const emit = defineEmits<{
   (e: "card-dropped", payload: { imageGroupId: number; movedItem: { id: number; url: string } }): void;
   (e: "delete", deletedImages: { id: number, url: string }[]): void;
   (e: "moveImageToGroup", image: { id: number, url: string }, groupName: string): void;
+  (e: "item-moved", payload: { itemId: number }): void;
 }>();
 
 const deleteGroup = (name: string) => {
@@ -112,20 +107,42 @@ const deleteGroup = (name: string) => {
   if (index !== -1) {
     const deletedImages = groups.value[index].images;
     groups.value.splice(index, 1);
-    emit("delete", deletedImages); // Отправка удаленных изображений в родительский компонент
+    emit("delete", deletedImages); 
   }
   isModalVisible.value = false;
 };
 
 
-const handleDrop = (event) => {
-  // const movedItem = group.images[event.oldIndex];
-  emit("card-dropped", { imageGroupId: props.imageGroupId, movedItem });
+const handleDropEnd = async (image_group_id: string, event: any) => {
+  const imageId = event.item._underlying_vm_.id;
+
+  let objData = {
+    image_id: imageId,
+    image_group_id: image_group_id,
+  };
+
+  let resp = await store.addImageGroupPostStore(objData);
+  if(resp.success == true){
+    store.getImageGroupStore();
+  }
 };
 
+const handleDropEmit = async (event: any) => {
+  const imageId = event.item._underlying_vm_?.id;
+  if (!imageId) {
+    return;
+  }
+  emit("item-moved", { itemId: imageId });
+}
+
+onMounted(() => {
+  setTimeout(async() => {
+    let data = await store.getImageGroupStore();
+    store.setGroups(data);
+  }, 500)
+});
+
 </script>
-
-
 
 <style scoped>
 .dragg-img {

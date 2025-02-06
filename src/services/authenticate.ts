@@ -64,7 +64,7 @@ export const createloginPost = async (loginCreate: IloginCreate) => {
     if (data) {
       ElNotification({
         title: "Вы создали логин клиенту!",
-        message: "Пожалуйста, подождите",
+        message: "",
         type: "success",
       });
     }
@@ -114,8 +114,6 @@ export const signInToken = async (token: string) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log('Response data:', data.user_id);
 
     if (data && data.user_id) {
       localStorage.setItem('user_id', data.user_id);

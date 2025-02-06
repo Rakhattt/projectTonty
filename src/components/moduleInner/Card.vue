@@ -3,12 +3,11 @@
     <draggable
       v-model="internalList"
       group="images"
-      @end="handleDrop"
+      @add="handleDropAdd"
       class="products"
       @delete="handleImagesDeleted"
     >
       <div v-for="item in internalList" :key="item.id">
-        {{ item.id }}
         <div class="demo-image__preview drag-item">
           <CustomImage
             :image="item"
@@ -34,6 +33,10 @@ const store = useRequestStore();
 const storeImage = useImageStore();
 const internalList = ref([...store.imagesList]);
 
+const props = defineProps<{
+  movedItemId: number | null;
+}>();
+
 watch(
   () => store.imagesList,
   (newList) => {
@@ -42,19 +45,22 @@ watch(
   { immediate: true }
 );
 
-const handleDrop = async (event: any, payload: any) => {
-  const movedItem = internalList.value[event.oldIndex];
-  const movedItemId = movedItem.id - 1;
-  const imageGroupId = payload.imageGroupId;
-  let objData = {
-        image_id: movedItemId,
-        image_group_id: imageGroupId,
-      }
-  await storeImage.addImageGroupPostStore(objData);
+const handleDropAdd = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  const movedItemId = props.movedItemId;
+
+  if (movedItemId === null) {
+    console.error("No moved item ID");
+    return;
+  }
+
+  let resp = await storeImage.deleteImageFromGroupStore(movedItemId);
+  if(resp.success == true){
+    storeImage.getImageGroupStore();
+  }
 };
 const handleImagesDeleted = (deletedImages: { id: number, url: string }[]) => {
   internalList.value.push(...deletedImages);
-  console.log(' parent delete', internalList.value)
 };
 const handleMoveImageToGroup = (imageId: number, groupName: string) => {
   if (!storeImage.groups) {
