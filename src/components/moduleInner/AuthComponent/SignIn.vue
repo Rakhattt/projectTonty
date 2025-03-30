@@ -29,6 +29,7 @@
           label="Почта"
           label-position="top"
           placeholder="Почта"
+          
           :rules="[
             {
               type: 'email',

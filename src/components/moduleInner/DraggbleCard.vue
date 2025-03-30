@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-for="(group, index) in groups" :key="index" class="mb-10">
-      <!-- <pre>{{ group }}</pre> -->
       <div class="d-flex justify-content-between mb-2">
         <input
           type="text"
@@ -26,12 +25,12 @@
           :data-id="item.id"
         >
           <el-image
-            :src="item.url"
+            :src="typeof item === 'string' ? item : item?.url"
             fit="cover"
             :zoom-rate="1.2"
             :max-scale="7"
             :min-scale="0.2"
-            :preview-src-list="imageUrls(group.images)"
+            :preview-src-list="group.images"
             :initial-index="itemIndex"
             class="dragg-img"
           />

@@ -62,6 +62,7 @@ const showModal = ref(false);
 const showModalClient = ref(false);
 const route = useRoute();
 const router = useRouter();
+
 const isAuthPage = computed(() => {
   return (
     route.name === "sign-up" ||
@@ -69,10 +70,13 @@ const isAuthPage = computed(() => {
     route.name === "login"
   );
 });
+const clientId = computed(() => Number(route.params.id));
 
 const confirmEvent = async () => {
-  await store.clientDeleteStore();
-  // router.push({ name: "personal-account" });
+  let response = await store.clientDeleteStore(clientId.value);
+  if(response.success){
+    router.push({ name: "personal-account" });
+  }
 };
 const cancelEvent = () => {
   console.log("cancel!");

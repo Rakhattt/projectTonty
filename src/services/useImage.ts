@@ -160,6 +160,32 @@ export const deleteImageFromGroup = async (image_id: number) => {
   }
 };
 
+export const getClients = async () => {
+  try {
+    const { data } = await apiAxios.get(
+      `http://localhost:8000/clients/`,
+    );
+
+    if (data) {
+      ElNotification({
+        title: "get request",
+        message: "Пожалуйста, подождите",
+        type: "success",
+      });
+    }
+
+    return data;
+  } catch (error) {
+    ElNotification({
+      title: "Ошибка",
+      message: "Произошла ошибка при загрузке данных",
+      type: "warning",
+    });
+
+    return [];
+  }
+};
+
 export const getImageGroup = async () => {
   const user_id = localStorage.getItem("user_id")
   try {

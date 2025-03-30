@@ -89,7 +89,7 @@ const signUp = async () => {
   let resp = await store.signUpPostStore(objData);
 
   if (resp.success == true) {
-    router.push({ name: "personal-account" });
+    router.push({ name: "sign-in" });
   }
 };
 </script>

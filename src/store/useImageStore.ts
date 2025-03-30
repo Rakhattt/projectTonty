@@ -9,6 +9,7 @@ import {
   deleteImageFromGroup,
   getImageGroup,
   clientDelete,
+  getClients,
 } from "@/services/useImage";
 
 export interface Image {
@@ -40,6 +41,15 @@ export const useImageStore = defineStore("imageStore", () => {
   const getImageGroupStore = async () => {
     try {
       const response = await getImageGroup();
+      return response;
+    } catch (error) {
+      console.error("Ошибка при загрузке:");
+    }
+  };
+
+  const getClientsStore = async () => {
+    try {
+      const response = await getClients();
       return response;
     } catch (error) {
       console.error("Ошибка при загрузке:");
@@ -132,6 +142,7 @@ export const useImageStore = defineStore("imageStore", () => {
     deleteImageFromGroupStore,
     getImageGroupStore,
     clientDeleteStore,
-    setGroups
+    setGroups,
+    getClientsStore
   };
 });

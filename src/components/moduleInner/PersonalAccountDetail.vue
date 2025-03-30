@@ -5,9 +5,9 @@
       border
       style="margin: 40px 0"
     >
-      <el-descriptions-item label="Имя">Рахат</el-descriptions-item>
+      <el-descriptions-item label="Имя">{{ client?.name }}</el-descriptions-item>
       <el-descriptions-item label="Логин">
-        rakhat01
+        {{ client?.login }}
       </el-descriptions-item>
     </el-descriptions>
 
@@ -46,20 +46,36 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { computed } from "vue";
+
+import { ref, onMounted, watchEffect } from "vue";
 import { ElImage, ElTable, ElTableColumn, ElDialog, ElButton } from "element-plus";
 import { useImageStore } from "@/store/useImageStore";
+import { useRoute } from "vue-router";
+
+const store = useImageStore();
+const route = useRoute();
 
 const TableData = ref([]);
 const modalVisible = ref(false);
 const selectedItem = ref(null);
-const store = useImageStore();
 
+const clientId = computed(() => Number(route.params.id));
+const client = computed(() => store.clients.find(c => c.id === clientId.value));
+console.log('store.clients', store.clients)
 const openModal = (item) => {
   selectedItem.value = item;
   modalVisible.value = true;
 };
+watchEffect(() => {
+  console.log("Route ID:", route.params.id);
+  console.log("Clients:", store.clients);
 
+  const foundClient = store.clients.find(c => c.id === Number(route.params.id));
+  console.log("Found client:", foundClient);
+
+  client.value = foundClient || { name: "Не найден", login: "Не найден" };
+});
 onMounted(async () => {
   try {
     const data = await store.getImageGroupStore();
